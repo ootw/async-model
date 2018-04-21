@@ -7,55 +7,72 @@ import (
 	"log"
 )
 
-const async_head_len = 16
+const asyncHeadLen = 16
 
-type async_head struct {
-	version uint32
-	msgid   uint32
-	srcid   uint32
-	dstid   uint32
+const Version1 uint32 = 1
+const Version3 uint32 = 3
+
+const MsgidReq1118 uint32 = 1118
+const MsgidResp1112 uint32 = 1112
+const MsgidReq2000 uint32 = 2000
+const MsgidResp2001 uint32 = 2001
+
+type AsyncHead struct {
+	Version uint32
+	Msgid   uint32
+	Srcid   uint32
+	Dstid   uint32
 }
 
-func Decode(buf *bytes.Buffer) *async_head {
-	head := new(async_head)
-	err_version := binary.Read(buf, binary.LittleEndian, head.version)
-	if err_version != nil {
-		log.Println(err_version)
+func Decode(buf *bytes.Buffer) *AsyncHead {
+	if buf.Len() != asyncHeadLen {
+		log.Printf("buf len is error")
+	} else {
+		log.Printf("buf len is %d", buf.Len())
 	}
-	err_msgid := binary.Read(buf, binary.LittleEndian, head.msgid)
-	if err_msgid != nil {
-		log.Println(err_msgid)
+	head := new(AsyncHead)
+	errVersion := binary.Read(buf, binary.LittleEndian, &head.Version)
+	if errVersion != nil {
+		log.Println(errVersion)
 	}
-	err_srcid := binary.Read(buf, binary.LittleEndian, head.srcid)
-	if err_srcid != nil {
-		log.Println(err_srcid)
+	errMsgid := binary.Read(buf, binary.LittleEndian, &head.Msgid)
+	if errMsgid != nil {
+		log.Println(errMsgid)
 	}
-	err_dstid := binary.Read(buf, binary.LittleEndian, head.dstid)
-	if err_dstid != nil {
-		log.Println(err_dstid)
+	errSrcid := binary.Read(buf, binary.LittleEndian, &head.Srcid)
+	if errSrcid != nil {
+		log.Println(errSrcid)
 	}
-	fmt.Println(head.version)
-	fmt.Println(head.msgid)
-	fmt.Println(head.srcid)
-	fmt.Println(head.dstid)
+	errDstid := binary.Read(buf, binary.LittleEndian, &head.Dstid)
+	if errDstid != nil {
+		log.Println(errDstid)
+	}
 	return head
 }
 
-func Encode(head *async_head) *bytes.Buffer {
+func printAsyncHead(head *AsyncHead) {
+	fmt.Println(head.Version)
+	fmt.Println(head.Msgid)
+	fmt.Println(head.Srcid)
+	fmt.Println(head.Dstid)
+}
+
+func Encode(head *AsyncHead) *bytes.Buffer {
+	printAsyncHead(head)
 	buf := new(bytes.Buffer)
-	err_version := binary.Write(buf, binary.LittleEndian, head.version)
+	err_version := binary.Write(buf, binary.LittleEndian, head.Version)
 	if err_version != nil {
 		log.Println(err_version)
 	}
-	err_msgid := binary.Write(buf, binary.LittleEndian, head.msgid)
+	err_msgid := binary.Write(buf, binary.LittleEndian, head.Msgid)
 	if err_msgid != nil {
 		log.Println(err_msgid)
 	}
-	err_srcid := binary.Write(buf, binary.LittleEndian, head.srcid)
+	err_srcid := binary.Write(buf, binary.LittleEndian, head.Srcid)
 	if err_srcid != nil {
 		log.Println(err_srcid)
 	}
-	err_dstid := binary.Write(buf, binary.LittleEndian, head.dstid)
+	err_dstid := binary.Write(buf, binary.LittleEndian, head.Dstid)
 	if err_dstid != nil {
 		log.Println(err_dstid)
 	}
