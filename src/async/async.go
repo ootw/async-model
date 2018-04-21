@@ -47,6 +47,7 @@ func Decode(buf *bytes.Buffer) *AsyncHead {
 	if errDstid != nil {
 		log.Println(errDstid)
 	}
+	printAsyncHead(head)
 	return head
 }
 
@@ -60,21 +61,21 @@ func printAsyncHead(head *AsyncHead) {
 func Encode(head *AsyncHead) *bytes.Buffer {
 	printAsyncHead(head)
 	buf := new(bytes.Buffer)
-	err_version := binary.Write(buf, binary.LittleEndian, head.Version)
-	if err_version != nil {
-		log.Println(err_version)
+	errVersion := binary.Write(buf, binary.LittleEndian, head.Version)
+	if errVersion != nil {
+		log.Println(errVersion)
 	}
-	err_msgid := binary.Write(buf, binary.LittleEndian, head.Msgid)
-	if err_msgid != nil {
-		log.Println(err_msgid)
+	errMsgid := binary.Write(buf, binary.LittleEndian, head.Msgid)
+	if errMsgid != nil {
+		log.Println(errMsgid)
 	}
-	err_srcid := binary.Write(buf, binary.LittleEndian, head.Srcid)
-	if err_srcid != nil {
-		log.Println(err_srcid)
+	errSrcid := binary.Write(buf, binary.LittleEndian, head.Srcid)
+	if errSrcid != nil {
+		log.Println(errSrcid)
 	}
-	err_dstid := binary.Write(buf, binary.LittleEndian, head.Dstid)
-	if err_dstid != nil {
-		log.Println(err_dstid)
+	errDstid := binary.Write(buf, binary.LittleEndian, head.Dstid)
+	if errDstid != nil {
+		log.Println(errDstid)
 	}
 	return buf
 }
