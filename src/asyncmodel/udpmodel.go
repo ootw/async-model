@@ -6,7 +6,9 @@ import (
 	"fmt"
 )
 
-type UDPHeadReliable struct {
+const udpReliaLen, udpUnreliaLen = 12, 8
+
+type UDPReliableModel struct {
 	Version      uint16
 	Len          uint16 // 整个数据包长度（UDP头+ASYNC头+用户数据）
 	CheckSum     uint16
@@ -15,7 +17,7 @@ type UDPHeadReliable struct {
 	SN           uint32
 }
 
-type UDPHeadUnreliable struct {
+type UDPUnreliableModel struct {
 	Version      uint16
 	Len          uint16 // 整个数据包长度（UDP头+ASYNC头+用户数据）
 	CheckSum     uint16
@@ -23,32 +25,59 @@ type UDPHeadUnreliable struct {
 	Padding      int
 }
 
-func (udpHeadRelia UDPHeadReliable) Encode() *bytes.Buffer {
+func (udpRelia UDPReliableModel) Encode() *bytes.Buffer {
 	buf := new(bytes.Buffer)
-	binary.Write(buf, binary.LittleEndian, udpHeadRelia.Version)
-	binary.Write(buf, binary.LittleEndian, udpHeadRelia.Len)
-	binary.Write(buf, binary.LittleEndian, udpHeadRelia.CheckSum)
-	binary.Write(buf, binary.LittleEndian, udpHeadRelia.ReliableFlag)
-	binary.Write(buf, binary.LittleEndian, udpHeadRelia.ACkFlag)
-	binary.Write(buf, binary.LittleEndian, udpHeadRelia.SN)
+	binary.Write(buf, binary.LittleEndian, udpRelia.Version)
+	binary.Write(buf, binary.LittleEndian, udpRelia.Len)
+	binary.Write(buf, binary.LittleEndian, udpRelia.CheckSum)
+	binary.Write(buf, binary.LittleEndian, udpRelia.ReliableFlag)
+	binary.Write(buf, binary.LittleEndian, udpRelia.ACkFlag)
+	binary.Write(buf, binary.LittleEndian, udpRelia.SN)
 	return buf
 }
 
-func (udpHeadRelia UDPHeadReliable) Decode(buf *bytes.Buffer) {
-	binary.Read(buf, binary.LittleEndian, &udpHeadRelia.Version)
-	binary.Read(buf, binary.LittleEndian, &udpHeadRelia.Len)
-	binary.Read(buf, binary.LittleEndian, &udpHeadRelia.CheckSum)
-	binary.Read(buf, binary.LittleEndian, &udpHeadRelia.ReliableFlag)
-	binary.Read(buf, binary.LittleEndian, &udpHeadRelia.ACkFlag)
-	binary.Read(buf, binary.LittleEndian, &udpHeadRelia.SN)
-	printUDPHeadReliable(&udpHeadRelia)
+func (udpRelia UDPReliableModel) Decode(buf *bytes.Buffer) {
+	binary.Read(buf, binary.LittleEndian, &udpRelia.Version)
+	binary.Read(buf, binary.LittleEndian, &udpRelia.Len)
+	binary.Read(buf, binary.LittleEndian, &udpRelia.CheckSum)
+	binary.Read(buf, binary.LittleEndian, &udpRelia.ReliableFlag)
+	binary.Read(buf, binary.LittleEndian, &udpRelia.ACkFlag)
+	binary.Read(buf, binary.LittleEndian, &udpRelia.SN)
+	printUDPReliableModel(&udpRelia)
 }
 
-func printUDPHeadReliable(udpHeadRelia *UDPHeadReliable) {
-	fmt.Println(udpHeadRelia.Version)
-	fmt.Println(udpHeadRelia.Len)
-	fmt.Println(udpHeadRelia.CheckSum)
-	fmt.Println(udpHeadRelia.ReliableFlag)
-	fmt.Println(udpHeadRelia.ACkFlag)
-	fmt.Println(udpHeadRelia.SN)
+func (udpUnrelia UDPUnreliableModel) Encode() *bytes.Buffer {
+	buf := new(bytes.Buffer)
+	binary.Write(buf, binary.LittleEndian, udpUnrelia.Version)
+	binary.Write(buf, binary.LittleEndian, udpUnrelia.Len)
+	binary.Write(buf, binary.LittleEndian, udpUnrelia.CheckSum)
+	binary.Write(buf, binary.LittleEndian, udpUnrelia.ReliableFlag)
+	binary.Write(buf, binary.LittleEndian, udpUnrelia.Padding)
+	return buf
+}
+
+func (udpUnrelia UDPUnreliableModel) Decode(buf *bytes.Buffer) {
+	binary.Read(buf, binary.LittleEndian, &udpUnrelia.Version)
+	binary.Read(buf, binary.LittleEndian, &udpUnrelia.Len)
+	binary.Read(buf, binary.LittleEndian, &udpUnrelia.CheckSum)
+	binary.Read(buf, binary.LittleEndian, &udpUnrelia.ReliableFlag)
+	binary.Read(buf, binary.LittleEndian, &udpUnrelia.Padding)
+	printUDPUnreliableModel(&udpUnrelia)
+}
+
+func printUDPReliableModel(udpRelia *UDPReliableModel) {
+	fmt.Println(udpRelia.Version)
+	fmt.Println(udpRelia.Len)
+	fmt.Println(udpRelia.CheckSum)
+	fmt.Println(udpRelia.ReliableFlag)
+	fmt.Println(udpRelia.ACkFlag)
+	fmt.Println(udpRelia.SN)
+}
+
+func printUDPUnreliableModel(udpUnrelia *UDPUnreliableModel) {
+	fmt.Println(udpUnrelia.Version)
+	fmt.Println(udpUnrelia.Len)
+	fmt.Println(udpUnrelia.CheckSum)
+	fmt.Println(udpUnrelia.ReliableFlag)
+	fmt.Println(udpUnrelia.Padding)
 }
