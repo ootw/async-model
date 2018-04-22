@@ -1,11 +1,11 @@
 package main
 
-import (
-	"asyncmodel"
-)
+import "asyncmodel/udp"
 
 func main() {
-	asyncModel := asyncmodel.AsyncModel{Version: asyncmodel.Version1, Msgid: asyncmodel.MsgidResp1112, Srcid: 1, Dstid: 1}
-	buf := asyncModel.Encode()
-	asyncModel.Decode(buf)
+	//asyncModel := asyncmodel.AsyncModel{Version: asyncmodel.Version1, Msgid: asyncmodel.MsgidResp1112, Srcid: 1, Dstid: 1}
+	//buf := asyncModel.Encode()
+	//asyncModel.Decode(buf)
+	go udp.Listen()
+	udp.Dial()
 }
