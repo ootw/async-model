@@ -1,4 +1,4 @@
-package async
+package asyncmodel
 
 import (
 	"fmt"

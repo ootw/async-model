@@ -1,11 +1,11 @@
 package main
 
 import (
-	"async"
+	"asyncmodel"
 )
 
 func main() {
-	asyncModel := &async.AsyncHead{Version: async.Version1, Msgid: async.MsgidResp1112, Srcid: 1, Dstid: 1}
-	buf := async.Encode(asyncModel)
-	async.Decode(buf)
+	asyncModel := asyncmodel.AsyncModel{Version: asyncmodel.Version1, Msgid: asyncmodel.MsgidResp1112, Srcid: 1, Dstid: 1}
+	buf := asyncModel.Encode()
+	asyncModel.Decode(buf)
 }
