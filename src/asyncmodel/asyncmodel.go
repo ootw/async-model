@@ -24,7 +24,7 @@ type AsyncModel struct {
 	Dstid   uint32
 }
 
-func (async AsyncModel) Decode(buf *bytes.Buffer) {
+func (async *AsyncModel) Decode(buf *bytes.Buffer) {
 	if buf.Len() != asyncModelLen {
 		log.Printf("buf len is error")
 	} else {
@@ -46,7 +46,7 @@ func (async AsyncModel) Decode(buf *bytes.Buffer) {
 	if errDstid != nil {
 		log.Println(errDstid)
 	}
-	printAsyncModel(&async)
+	printAsyncModel(async)
 }
 
 func printAsyncModel(head *AsyncModel) {
@@ -56,8 +56,8 @@ func printAsyncModel(head *AsyncModel) {
 	fmt.Println(head.Dstid)
 }
 
-func (async AsyncModel) Encode() *bytes.Buffer {
-	printAsyncModel(&async)
+func (async *AsyncModel) Encode() *bytes.Buffer {
+	printAsyncModel(async)
 	buf := new(bytes.Buffer)
 	errVersion := binary.Write(buf, binary.LittleEndian, async.Version)
 	if errVersion != nil {
